@@ -1,6 +1,8 @@
 # compiler
 CC = g++
 
+OS := $(shell uname)
+
 # all headers files
 INCLUDES = /includes
 
@@ -16,11 +18,11 @@ all: cleanObj cleanTgt createTgt objectsGenerate copyToTarget generateAgent crea
 clean: cleanObj cleanTgt
 
 cleanObj:
-	rm -f *.o rm -f *.so
-	
+	rm -f *.o rm -f *.so rm -f *.dylib
+
 cleanTgt:
 	rm -rf target
-	
+
 createTgt:
 	mkdir target
 
@@ -29,9 +31,13 @@ objectsGenerate:
 
 copyToTarget:
 	mv *.o ./target/
-	
+
 generateAgent:
 	$(CC) $(CFLAGS) -c -o recordagent.o recordagent.cpp target/*.o
-	
+
 createSharedLib:
+ifeq ($(OS),Darwin)
+	$(CC) $(CFLAGS) -dynamiclib -o librecordagent.dylib recordagent.o target/*.o
+else
 	$(CC) $(CFLAGS) -shared -o librecordagent.so recordagent.o target/*.o
+endif

@@ -17,10 +17,8 @@ clean: cleanObj cleanTgt
 
 cleanObj:
 	rm -f *.o rm -f *.so
-	
 cleanTgt:
 	rm -rf target
-	
 createTgt:
 	mkdir target
 
@@ -29,9 +27,9 @@ objectsGenerate:
 
 copyToTarget:
 	mv *.o ./target/
-	
+
 generateAgent:
 	$(CC) $(CFLAGS) -c -o replayagent.o replayagent.cpp target/*.o
-	
+
 createSharedLib:
-	$(CC) $(CFLAGS) -shared -o libreplayagent.so replayagent.o target/*.o
+	$(CC) $(CFLAGS) -dynamiclib -o libreplayagent.dylib replayagent.o target/*.o
